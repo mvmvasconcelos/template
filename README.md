@@ -1,3 +1,3 @@
 # Template para futuros projetos
 
-Template criado para ser utilizado em projetos futuros.
+Template criado com Phaser 3.10.1 para ser utilizado em projetos futuros.
