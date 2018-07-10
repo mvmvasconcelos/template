@@ -1,3 +1,7 @@
+var game;
+	/*	Cria as variáveis que armazenarão a largura e altura da tela, 
+		e o centro X e Y dela, passadas no preload() */
+	var largura, altura, centroX, centroY;
 window.onload = function() {
 	//Configurações a serem usadas
 	var config = {
@@ -6,20 +10,21 @@ window.onload = function() {
 		width: 500,
 		height: 600,
 		background: '#ffffff',
-		scene: {
-			preload: preload,
-			create: create
-		}
+		scene: [telaLoading, telaTitulo] 
 	};
 
-	/*	Cria as variáveis que armazenarão a largura e altura da tela, 
-		e o centro X e Y dela, passadas no preload() */
-	var largura, altura, centroX, centroY;
 
 	//Cria um novo objeto Phaser Game
-	var game = new Phaser.Game(config);
+	game = new Phaser.Game(config);
 
-	function preload() {
+}//window.onload
+
+class telaLoading extends Phaser.Scene {
+	constructor(){
+        super("telaLoading");
+    }
+
+	preload() {
 		//Carrega a imagem
 		this.load.image('logo', 'assets/sprites/logo.png');
 		
@@ -46,7 +51,6 @@ window.onload = function() {
 	    var caixaLoading = this.add.graphics();
 	    caixaLoading.fillStyle(0x222222, 0.8);
 	    caixaLoading.fillRect(centroX / 2, centroY, centroX, 25);
-	   // console.log("center " + game.getBounds().width);
 	    
 	    //Texto do loading
 	    var textoLoading = this.make.text({
@@ -83,8 +87,6 @@ window.onload = function() {
 	    	}
 	    });
 	    textoArquivo.setOrigin(0.5, 0.5);
-
-
 
 	    /*	Listener que checa pelo evento 'progress' que é emitido pelo
 			LoaderPlugin do Phaser. Ele ocorre a cada vez que um arquivo é
@@ -125,13 +127,38 @@ window.onload = function() {
 	    	textoProgresso.destroy();
 	    	textoArquivo.destroy();
 	    });
-	}
-	function create() {
+	}//preload
+	create() {
 		//Adiciona o logo centralizado
 		var logo = this.add.image(centroX, centroY, 'logo');
 		logo.setOrigin(0.5, 0.5);
 		console.log("FOI");
 
+		//Timer para carregar a tela título após exibir o logo por alguns segundos
+		this.time.addEvent({delay: 2000, callback: this.tela, callbackScope: this, loop: false});
+
+
+	}//create
+	tela(){
+		this.scene.start("telaTitulo")
 	}
 
-}
+}//class telaLoading
+
+class telaTitulo extends Phaser.Scene {
+	constructor(){
+        super("telaTitulo");
+    }
+    preload(){
+    	var textoTitulo = this.make.text({
+	    	x: centroX,
+	    	y: centroY,
+	    	text: 'Bem vindo à \nTELA TÍTULO',
+	    	style: {
+	    		font: '16px Monospace',
+	    		fill: '#ffffff'
+	    	}
+	    });
+	    textoTitulo.setOrigin(0.5, 0.5);
+    }
+}//class telaTitulo
